@@ -10,14 +10,6 @@ import scala.math.E
   */
 
 object IMM {
-  /*def factorial(n: Int): Int = n match {
-    case 0 => 1
-    case _ => n * factorial(n-1)
-  }
-
-  def binomial(n: Int, k: Int): Int = {
-    factorial(n)/factorial(k)*factorial(n-k)
-  }*/
   private def fact(n: Int): Int = if (n == 0) 1 else n * fact(n - 1)
   private def binomial(n: Int, k: Int) = fact(n) / (fact(k) * fact(n - k))
 
@@ -75,12 +67,6 @@ object IMM {
   //mariano pascarella *edit teta,n ,added FR ,Boolean
   //***********************
   def nodeSelection(R: Array[Graph[(Int, Int, Double, String), Float]], k: Int, n: Int): (Array[VertexId],Int) ={
-    /*for(i<- 1 to k){
-      //Identify the vertex v that maximizes FR(S∗k [ v) − FR(S∗k);
-      //Insert v into S∗k;
-      //Sstar +=
-    }*/
-    //return Sstar
     val teta=R.length
     val SSet : Array[VertexId] = new Array[VertexId](k)
     var RRsetCover : Array[Boolean] = new Array[Boolean](teta)
@@ -133,16 +119,13 @@ object IMM {
     val beta = sqrt((1-1/E)*(log(binomial(n.toInt,k))+(l*log(n))+log(2)))
     val lambda1 =2*n*pow((1-1/E)*alpha+beta,2)
     println("alpha beta lambda1 -> "+alpha+" "+beta+" "+lambda1)
-    val load = System.nanoTime()
     val fine = log2(n-1)
     var i =1
     var LBbreak=false
     println("first while")
     while(i<=fine  && !LBbreak){
       val x=n / pow(2,i)
-      println("x  lab/x  "+x+"          "+lambda/x)
       val tetai=(lambda/x).toInt
-      println("genera rrset tetai= "+tetai)
 
       //genera RR sets
       //mariano pascarella
@@ -150,19 +133,12 @@ object IMM {
       val RRset : Array[Graph[(Int, Int, Double, String), Float]] = new Array[Graph[(Int, Int, Double, String), Float]](tetai)
       for(i <- 0 until tetai){
         RRset(i) = randomBFS(G, r.nextInt(n)+1).subgraph(vpred = (_, attr) => attr._1 == 1 && attr._4 == "N")
-        val load1 = System.nanoTime()
-        println("***********************RRSET****************************"+ (load1 - load))
-        /*println("Questo è il " + (i+1) + "° RR generato")
-        println("---------------------")
-        println(RRset(i).vertices.collect().mkString("\n"))
-        println("---------------------")*/
       }
       //***********************
+
       println("internal node selection")
       val res : (Array[VertexId],Int) =nodeSelection(RRset,k,n)
-      //val S =res._1
       val FRsR =res._2
-      //val FRsR=FR(S,RRset)
       if(n*FRsR>=(1+ε)*x){
         LB= n*FRsR.toInt/(1+ε.toInt)
         LBbreak=true
@@ -177,10 +153,6 @@ object IMM {
     val R : Array[Graph[(Int, Int, Double, String), Float]] = new Array[Graph[(Int, Int, Double, String), Float]](teta)
     for(i <- 0 until teta){
       R(i) = randomBFS(G, r.nextInt(n)+1).subgraph(vpred = (_, attr) => attr._1 == 1 && attr._4 == "N")
-      /*println("Questo è il " + (i+1) + "° RR generato")
-      println("---------------------")
-      println(R(i).vertices.collect().mkString("\n"))
-      println("---------------------")*/
     }
     //***********************
 
